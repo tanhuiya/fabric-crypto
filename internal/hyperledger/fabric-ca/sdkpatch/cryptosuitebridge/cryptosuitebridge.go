@@ -1,7 +1,7 @@
 package cryptosuitebridge
 
 import (
-	"FabricBccsp/cryptosuite/core"
+	"github.com/tanhuiya/fabric-crypto/cryptosuite/core"
 	"crypto/ecdsa"
 	"github.com/hyperledger/fabric/bccsp"
 	"github.com/hyperledger/fabric/bccsp/utils"

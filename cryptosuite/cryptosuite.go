@@ -1,7 +1,7 @@
 package cryptosuite
 
 import (
-	"FabricBccsp/cryptosuite/core"
+	"github.com/tanhuiya/fabric-crypto/cryptosuite/core"
 	"github.com/pkg/errors"
 	"hash"
 	"sync"

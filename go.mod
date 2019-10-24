@@ -1,4 +1,4 @@
-module FabricBccsp
+module github.com/tanhuiya/fabric-crypto
 
 go 1.12
 

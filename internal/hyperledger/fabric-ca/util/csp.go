@@ -1,12 +1,12 @@
 package util
 
 import (
-	"FabricBccsp/cryptosuite/core"
+	"github.com/tanhuiya/fabric-crypto/cryptosuite/core"
 	"crypto/ecdsa"
 	"crypto/rsa"
 	"fmt"
 	"github.com/pkg/errors"
-	factory "FabricBccsp/internal/hyperledger/fabric-ca/sdkpatch/cryptosuitebridge"
+	factory "github.com/tanhuiya/fabric-crypto/internal/hyperledger/fabric-ca/sdkpatch/cryptosuitebridge"
 )
 
 // ImportBCCSPKeyFromPEMBytes attempts to create a private BCCSP key from a pem byte slice

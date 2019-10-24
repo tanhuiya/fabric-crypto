@@ -1,9 +1,9 @@
 package cryptoutil
 
 import (
-	"FabricBccsp/cryptosuite/core"
-	factory "FabricBccsp/internal/hyperledger/fabric-ca/sdkpatch/cryptosuitebridge"
-	"FabricBccsp/internal/hyperledger/fabric-ca/util"
+	"github.com/tanhuiya/fabric-crypto/cryptosuite/core"
+	factory "github.com/tanhuiya/fabric-crypto/internal/hyperledger/fabric-ca/sdkpatch/cryptosuitebridge"
+	"github.com/tanhuiya/fabric-crypto/internal/hyperledger/fabric-ca/util"
 	"crypto/ecdsa"
 	"crypto/sha256"
 	"crypto/x509"

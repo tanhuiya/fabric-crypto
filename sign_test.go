@@ -1,8 +1,8 @@
 package FabricBccsp
 
 import (
-	"FabricBccsp/cryptosuite"
-	"FabricBccsp/cryptoutil"
+	"github.com/tanhuiya/fabric-crypto/cryptosuite"
+	"github.com/tanhuiya/fabric-crypto/cryptoutil"
 	"encoding/hex"
 	"fmt"
 	"github.com/stretchr/testify/assert"
