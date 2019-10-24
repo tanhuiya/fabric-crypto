@@ -95,7 +95,14 @@ func verifyECDSA(k *ecdsa.PublicKey, signature, digest []byte, opts bccsp.Signer
 
 func PublicKeyToAddress(pub core.Key) (string, error) {
 	pubbyte, err := pub.Bytes()
-	pubecdsa, err := x509.ParsePKIXPublicKey(pubbyte)
+	if err != nil {
+		return "", errors.Wrap(err, "marshal error")
+	}
+	return EcdsaPubToAddress(pubbyte)
+}
+
+func EcdsaPubToAddress(pubByte []byte) (string, error) {
+	pubecdsa, err := x509.ParsePKIXPublicKey(pubByte)
 	if err != nil {
 		return "", errors.Wrap(err, "get pubkey error")
 	}
