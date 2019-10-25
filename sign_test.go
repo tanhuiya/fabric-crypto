@@ -31,7 +31,7 @@ AiaiI2BjxnL3/TetJ8iFJYZyWvK//an13WV/AiARBJd/pI5A7KZgQxJhXmmR8bie
 XdsmTcdRvJ3TS/6HCA==
 -----END CERTIFICATE-----`
 
-
+// 实例化私钥
 func TestGetPrivKey(t *testing.T)  {
 	cs := cryptosuite.GetDefault()
 	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
@@ -40,6 +40,7 @@ func TestGetPrivKey(t *testing.T)  {
 	}
 }
 
+// 实例化私钥
 func TestGetPubKey(t *testing.T)  {
 	cs := cryptosuite.GetDefault()
 	pubKey, err := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
@@ -48,6 +49,7 @@ func TestGetPubKey(t *testing.T)  {
 	}
 }
 
+// 公私钥是否匹配
 func TestPubAndPrivMatch(t *testing.T)  {
 	cs := cryptosuite.GetDefault()
 	pubKey, err := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
@@ -60,6 +62,7 @@ func TestPubAndPrivMatch(t *testing.T)  {
 	assert.Equal(t, b1, b2)
 }
 
+// 使用公钥验证签名
 func TestVerify(t *testing.T) {
 	cs := cryptosuite.GetDefault()
 	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
