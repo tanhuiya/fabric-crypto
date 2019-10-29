@@ -1,11 +1,10 @@
 package FabricBccsp
 
 import (
-	"github.com/tanhuiya/fabric-crypto/cryptosuite"
-	"github.com/tanhuiya/fabric-crypto/cryptoutil"
 	"encoding/hex"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"github.com/tanhuiya/fabric-crypto/cryptoutil"
 	"testing"
 )
 
@@ -31,94 +30,103 @@ AiaiI2BjxnL3/TetJ8iFJYZyWvK//an13WV/AiARBJd/pI5A7KZgQxJhXmmR8bie
 XdsmTcdRvJ3TS/6HCA==
 -----END CERTIFICATE-----`
 
+var badCert = `-----BEGIN CERTIFICATE-----
+MIICGTCCAcCgAwIBAgIRSDF/1GXtEud5GQL2CZykkOkwCgYIKoZIzj0EAwIwczEL
+MGwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1T
+cmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh
+Lm9yZzEuZXhhbXBsZS5jb20wHhcNMTcwNzI4MTQyNzIwWhcNMjcwNzI2MTQyNzIw
+WjBbMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN
+U2FuIEZyYW5jaXNjbzEfMB0GA1UEAwwWVXNlcjFAb3JnMS5leGFtcGxlLmNvbTBZ
+MBMGByqGSM49AgEGCCqGSM49AwEHA0IABPIVPS+hdftwDg8+02y1aV5pOnCO9tIn
+f60wZMbrt/5N0J8PFZgylBjEuUTxWRsTMpYPAJi8NlEwoJB+/YSs29ujTTBLMA4G
+A1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMCsGA1UdIwQkMCKAIIeR0TY+iVFf
+mvoEKwaToscEu43ZXSj5fTVJornjxDUtMAoGCCqGSM49BAMCA0cAMEQCID+dZ7H5
+AiaiI2BjxnL3/TetJ8iFJYZyWvK//an13WV/AiARBJd/pI5A7KZgQxJhXmmR8bie
+XdsmTcdRvJ3TS/6HCA==
+-----END CERTIFICATE-----`
+
+var fakeCert = `-----BEGIN CERTIFICATE-----
+MIICKTCCAdCgAwIBAgIQNKdAgE+Ow/dtsJxpWNx7mjAKBggqhkjOPQQDAjBzMQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+YW5jaXNjbzEZMBcGA1UEChMQb3JnMS5leGFtcGxlLmNvbTEcMBoGA1UEAxMTY2Eu
+b3JnMS5leGFtcGxlLmNvbTAeFw0xOTEwMjUwMjM2MDBaFw0yOTEwMjIwMjM2MDBa
+MGwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1T
+YW4gRnJhbmNpc2NvMQ8wDQYDVQQLEwZjbGllbnQxHzAdBgNVBAMMFlVzZXIxQG9y
+ZzEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATuX8Gl8U0m
+d2jw2PYh2nd68Ym7LJ2ZvkKy/JkDmyyRYNn0nyCjw7Gst00BZQ/4ZbVZ73s5bvUo
+zCTsuLCgd8mVo00wSzAOBgNVHQ8BAf8EBAMCB4AwDAYDVR0TAQH/BAIwADArBgNV
+HSMEJDAigCAA59kEw+z+G4zJFZTSEYIvJafr06zEYLRv13OdryzgTzAKBggqhkjO
+PQQDAgNHADBEAiBL4mvV0oNzHrkqLB+FZ1leih+22PYgYsPALHLHnTWnpAIgCaX/
+XESkmkAPme/JQ403xlbL0Ry8YOOmVmitbZtW5wc=
+-----END CERTIFICATE-----`
+
 // 实例化私钥
 func TestGetPrivKey(t *testing.T)  {
-	cs := cryptosuite.GetDefault()
-	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
-	if err != nil {
-		fmt.Println(privKey)
-	}
+	_, err := cryptoutil.DecodePriv([]byte(testPrivKey))
+	assert.NoError(t, err)
 }
 
-// 实例化私钥
 func TestGetPubKey(t *testing.T)  {
-	cs := cryptosuite.GetDefault()
-	pubKey, err := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
-	if err != nil {
-		fmt.Println(pubKey)
-	}
-}
-
-// 公私钥是否匹配
-func TestPubAndPrivMatch(t *testing.T)  {
-	cs := cryptosuite.GetDefault()
-	pubKey, err := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
-	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
-	assert.NoError(t, err, "should not have error")
-	pub1, err := privKey.PublicKey()
-
-	b1, _ := pub1.Bytes()
-	b2, _ := pubKey.Bytes()
-	assert.Equal(t, b1, b2)
-}
-
-// 使用公钥验证签名
-func TestVerify(t *testing.T) {
-	cs := cryptosuite.GetDefault()
-	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
-	assert.NoError(t, err, "privkey export error")
-
-	pubKey, err := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
-
-	msg := []byte("this is a testmsg")
-	signature, err := cryptoutil.SignMsg(msg, privKey, cs)
-	assert.NoError(t, err, "signature error")
-
-	valid, err := cryptoutil.ValidSignature(msg, pubKey, signature, cs)
+	pubKey, err := cryptoutil.DecodePub([]byte(testCert))
 	assert.NoError(t, err, "verify error")
-	assert.Equal(t, true, valid, "verify error")
-}
 
-func TestPrivToPub(t *testing.T)  {
-	cs := cryptosuite.GetDefault()
-	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
-	assert.NoError(t, err, "privkey export error")
-
-	pubKey, err := privKey.PublicKey()
-
-	msg := []byte("this is a testmsg")
-	signature, err := cryptoutil.SignMsg(msg, privKey, cs)
-	assert.NoError(t, err, "signature error")
-
-	valid, err := cryptoutil.ValidSignature(msg, pubKey, signature, cs)
+	privKey, err := cryptoutil.DecodePriv([]byte(testPrivKey))
 	assert.NoError(t, err, "verify error")
-	assert.Equal(t, true, valid, "verify error")
+	assert.Equal(t, privKey.Public(), pubKey)
 }
 
+// 公钥序列化
 func TestPubToString(t *testing.T) {
-	cs := cryptosuite.GetDefault()
-	pubKey, _ := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
-	bytes, _ := pubKey.Bytes()
+	pubKey, _ := cryptoutil.DecodePub([]byte(testCert))
+	bytes := cryptoutil.MarshalPubkey(pubKey)
 	fmt.Println(hex.EncodeToString(bytes))
+	assert.Equal(t, hex.EncodeToString(bytes), "04f2153d2fa175fb700e0f3ed36cb5695e693a708ef6d2277fad3064c6ebb7fe4dd09f0f1598329418c4b944f1591b1332960f0098bc365130a0907efd84acdbdb")
 }
 
 func TestStringToPub(t *testing.T) {
 	msg := []byte("this is a testmsg")
-	cs := cryptosuite.GetDefault()
-	privKey, err := cryptoutil.GetPrivKeyFromKey([]byte(testPrivKey), cs)
+	privKey, err := cryptoutil.DecodePriv([]byte(testPrivKey))
 	assert.NoError(t, err, "privkey export error")
-	signature, err := cryptoutil.SignMsg(msg, privKey, cs)
+	signature, err := cryptoutil.SignMsg2(msg, privKey)
 	assert.NoError(t, err, "signature error")
-	pubS := "3059301306072a8648ce3d020106082a8648ce3d03010703420004f2153d2fa175fb700e0f3ed36cb5695e693a708ef6d2277fad3064c6ebb7fe4dd09f0f1598329418c4b944f1591b1332960f0098bc365130a0907efd84acdbdb"
-	pubB, _ := hex.DecodeString(pubS)
-	cryptoutil.VerifyFromPubString(msg, pubB, signature)
+	pubS := "04f2153d2fa175fb700e0f3ed36cb5695e693a708ef6d2277fad3064c6ebb7fe4dd09f0f1598329418c4b944f1591b1332960f0098bc365130a0907efd84acdbdb"
+	b, _  := hex.DecodeString(pubS)
+	pubB, _ := cryptoutil.UnMarshalPubKey(b)
+	valid, err := cryptoutil.Verifier2(msg, signature, pubB)
+	assert.NoError(t, err)
+	assert.True(t, valid, "valid should be true")
 }
+
+func TestVerifiers(t *testing.T)  {
+	msg := []byte("this is a testmsg")
+	privKey2, err := cryptoutil.DecodePriv([]byte(testPrivKey))
+	signature2, err := cryptoutil.SignMsg2(msg, privKey2)
+	assert.NoError(t, err)
+
+	pubKey, err := cryptoutil.DecodePub([]byte(testCert))
+	valid, err := cryptoutil.Verifier2(msg, signature2, pubKey)
+	assert.NoError(t, err, "verify error")
+	assert.Equal(t, true, valid, "verify error")
+}
+
+func TestBadVerifiers(t *testing.T)  {
+	msg := []byte("this is a testmsg")
+	privKey2, err := cryptoutil.DecodePriv([]byte(testPrivKey))
+	signature2, err := cryptoutil.SignMsg2(msg, privKey2)
+	assert.NoError(t, err)
+
+	pubKey, err := cryptoutil.DecodePub([]byte(fakeCert))
+	valid, err := cryptoutil.Verifier2(msg, signature2, pubKey)
+	assert.NoError(t, err, "verify error")
+	assert.Equal(t, false, valid, "verify error")
+}
+
+
 
 // 根据公钥生成地址
 func TestGetAddressByPub(t *testing.T)  {
-	cs := cryptosuite.GetDefault()
-	pubKey, _ := cryptoutil.GetPublicKeyFromCert([]byte(testCert), cs)
-
+	pubKey, _ := cryptoutil.DecodePub([]byte(testCert))
 	address, _ := cryptoutil.PublicKeyToAddress(pubKey)
-	fmt.Println(address)
+	assert.Equal(t, "0x204bCC42559Faf6DFE1485208F7951aaD800B313", address)
 }
+

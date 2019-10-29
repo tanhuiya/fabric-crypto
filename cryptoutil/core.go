@@ -9,7 +9,6 @@ import (
 	"encoding/asn1"
 	"encoding/pem"
 	"fmt"
-	"github.com/hyperledger/fabric/bccsp/utils"
 	"github.com/pkg/errors"
 	"math/big"
 )
@@ -40,7 +39,7 @@ func Verifier2(msg, signature []byte, pub *ecdsa.PublicKey) (bool, error) {
 		return false, err
 	}
 	if !lowS {
-		return false, fmt.Errorf("Invalid S. Must be smaller than half the order [%s][%s].", s, utils.GetCurveHalfOrdersAt(k.Curve))
+		return false, fmt.Errorf("Invalid S. Must be smaller than half the order [%s][%s].", sig.S)
 	}
 
 	return ecdsa.Verify(pub, digest, sig.R, sig.S), nil
@@ -101,7 +100,7 @@ func IsLowS(k *ecdsa.PublicKey, s *big.Int) (bool, error) {
 	return s.Cmp(halfOrder) != 1, nil
 }
 
-func DecodePriKey(priv []byte) (*ecdsa.PrivateKey, error) {
+func DecodePriv(priv []byte) (*ecdsa.PrivateKey, error) {
 	if len(priv) == 0 {
 		return nil, errors.New("Invalid PEM. It must be different from nil.")
 	}
@@ -116,7 +115,7 @@ func DecodePriKey(priv []byte) (*ecdsa.PrivateKey, error) {
 	}
 	return nil, errors.New("Found unknown private key type in PKCS")
 }
-func DecodePubKey(pub []byte) (*ecdsa.PublicKey, error) {
+func DecodePub(pub []byte) (*ecdsa.PublicKey, error) {
 	dcert, _ := pem.Decode(pub)
 	if dcert == nil {
 		return nil, errors.Errorf("Unable to decode cert bytes [%v]", pub)
