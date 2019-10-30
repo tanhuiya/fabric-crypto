@@ -127,11 +127,32 @@ func TestBadVerifiers(t *testing.T)  {
 }
 
 
-
 // 根据公钥生成地址
 func TestGetAddressByPub(t *testing.T)  {
 	pubKey, _ := cryptoutil.DecodePub([]byte(testCert))
 	address, _ := cryptoutil.PublicKeyToAddress(pubKey)
 	assert.Equal(t, "0x204bCC42559Faf6DFE1485208F7951aaD800B313", address)
+}
+
+// 调用格式
+func TestRPCSignFabricTx(t *testing.T)  {
+	priKey, err := cryptoutil.DecodePriv([]byte(testPrivKey))
+	assert.NoError(t, err)
+	priByte := cryptoutil.MarshalPrivateKey(priKey)
+
+	rawData := map[string]interface{}{
+		"from": "0x222222222222",
+		"to": 	"0x111111111111",
+		"amout": 5,
+		"gas": 	1,
+		"privateKey": hex.EncodeToString(priByte), // 注意参数格式
+		"code": 1, // 代表转账
+		"fabric": true, // important
+	}
+	rpcSignPost(rawData) // 调用接口签名
+}
+
+func rpcSignPost(data map[string]interface{})  {
+	// do nothing
 }
 
