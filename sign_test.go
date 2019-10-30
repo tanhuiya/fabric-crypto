@@ -62,8 +62,13 @@ XESkmkAPme/JQ403xlbL0Ry8YOOmVmitbZtW5wc=
 
 // 实例化私钥
 func TestGetPrivKey(t *testing.T)  {
-	_, err := cryptoutil.DecodePriv([]byte(testPrivKey))
+	priKey, err := cryptoutil.DecodePriv([]byte(testPrivKey))
 	assert.NoError(t, err)
+
+	priByte := cryptoutil.MarshalPrivateKey(priKey)
+	fmt.Println(hex.EncodeToString(priByte))
+	priKey2, err := cryptoutil.UnMarshalPrivateKey(priByte)
+	assert.Equal(t, priKey, priKey2)
 }
 
 func TestGetPubKey(t *testing.T)  {
