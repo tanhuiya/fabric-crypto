@@ -1,6 +1,7 @@
 package FabricBccsp
 
 import (
+	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
 	"github.com/stretchr/testify/assert"
@@ -66,9 +67,21 @@ func TestGetPrivKey(t *testing.T)  {
 	assert.NoError(t, err)
 
 	priByte := cryptoutil.MarshalPrivateKey(priKey)
-	fmt.Println(hex.EncodeToString(priByte))
+	//fmt.Println(hex.EncodeToString(priByte))
 	priKey2, err := cryptoutil.UnMarshalPrivateKey(priByte)
 	assert.Equal(t, priKey, priKey2)
+
+	pubKey := priKey.Public().(*ecdsa.PublicKey)
+	address, _ := cryptoutil.PublicKeyToAddress(pubKey)
+	fmt.Println(address)
+}
+
+func TestSign(t *testing.T)  {
+	msg := []byte("this is a testmsg")
+	privKey, err := cryptoutil.DecodePriv([]byte(testPrivKey))
+	assert.NoError(t, err, "privkey export error")
+	signature, err := cryptoutil.SignMsg2(msg, privKey)
+	fmt.Println(hex.EncodeToString(signature))
 }
 
 func TestGetPubKey(t *testing.T)  {

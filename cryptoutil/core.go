@@ -3,7 +3,6 @@ package cryptoutil
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"crypto/rand"
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/asn1"
@@ -11,6 +10,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"math/big"
+	"strings"
 )
 
 func Verifier2(msg, signature []byte, pub *ecdsa.PublicKey) (bool, error) {
@@ -50,8 +50,8 @@ func SignMsg2(msg []byte, priv *ecdsa.PrivateKey) ([]byte, error) {
 	hasher := sha256.New()
 	hasher.Write(msg)
 	digest := hasher.Sum(nil)
-
-	r, s, err := ecdsa.Sign(rand.Reader, priv, digest)
+	reader := strings.NewReader("Clear is better than clever")
+	r, s, err := ecdsa.Sign(reader, priv, digest)
 	if err != nil {
 		return nil, err
 	}
