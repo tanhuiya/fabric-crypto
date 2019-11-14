@@ -75,12 +75,20 @@ func TestGetPrivKey(t *testing.T)  {
 	address, _ := cryptoutil.PublicKeyToAddress(pubKey)
 	fmt.Println(address)
 }
-
+//3044022055f05f251527e8f2c60afd979d014ad67bf8bf3d6dadabdc0b8cc167d066a3ae02207549d3f8b47eaebf77c9813b401f9316db8cab9f690966586fe30e50354c36e9
+//30440220602dfd978508749a58431b5b7a55a26ffc60e1a8cf404e9220d1c4da61b4b54a022020d43cdcf69836e54f38af4dc2884343629aa7b865d16ec3e90c24de310ac2dd
+//3044022055f05f251527e8f2c60afd979d014ad67bf8bf3d6dadabdc0b8cc167d066a3ae02207549d3f8b47eaebf77c9813b401f9316db8cab9f690966586fe30e50354c36e9
 func TestSign(t *testing.T)  {
 	msg := []byte("this is a testmsg")
 	privKey, err := cryptoutil.DecodePriv([]byte(testPrivKey))
 	assert.NoError(t, err, "privkey export error")
 	signature, err := cryptoutil.SignMsg2(msg, privKey)
+	for i := 0; i < 100; i++ {
+		temp, err := cryptoutil.SignMsg2(msg, privKey)
+		assert.NoError(t, err, "sign error")
+		assert.Equal(t, signature, temp)
+		signature = temp
+	}
 	fmt.Println(hex.EncodeToString(signature))
 }
 
@@ -145,6 +153,18 @@ func TestGetAddressByPub(t *testing.T)  {
 	pubKey, _ := cryptoutil.DecodePub([]byte(testCert))
 	address, _ := cryptoutil.PublicKeyToAddress(pubKey)
 	assert.Equal(t, "0x204bCC42559Faf6DFE1485208F7951aaD800B313", address)
+}
+
+func TestPrivToAddress(t *testing.T)  {
+	const Priv = `-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgO+x/1pjgqImlzWe+
+fQj0E0ml/ajNet3lqenPtyvEwB+hRANCAASbLWrcFumBm7tzZKpCiPl/gzmVm1GI
+2vwHa6qRkVdEjMpLIL7weErc1C+/ww81NBRgDGyNxiHq6ndBUNHxv9M3
+-----END PRIVATE KEY-----`
+	privKey, _ := cryptoutil.DecodePriv([]byte(Priv))
+	pubKey := privKey.Public().(*ecdsa.PublicKey)
+	address, _ := cryptoutil.PublicKeyToAddress(pubKey)
+	fmt.Println(address)
 }
 
 // 调用格式

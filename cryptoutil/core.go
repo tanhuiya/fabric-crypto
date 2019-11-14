@@ -50,7 +50,7 @@ func SignMsg2(msg []byte, priv *ecdsa.PrivateKey) ([]byte, error) {
 	hasher := sha256.New()
 	hasher.Write(msg)
 	digest := hasher.Sum(nil)
-	reader := strings.NewReader("Clear is better than clever")
+	reader := strings.NewReader("11111111111111111111111111111111")
 	r, s, err := ecdsa.Sign(reader, priv, digest)
 	if err != nil {
 		return nil, err
